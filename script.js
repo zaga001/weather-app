@@ -10,13 +10,21 @@ form.addEventListener("submit", (e) => {
 });
 
 async function getWeather(location) {
-  const response = await fetch(
-    `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=JG55RBPYTP3JZSR3KGZHMBUFR`
-  );
-  const data = await response.json();
-  const processedData = processData(data);
-  console.log(processedData);
-  displayData(data);
+  try {
+    const response = await fetch(
+      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=JG55RBPYTP3JZSR3KGZHMBUFR`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch weather data");
+    }
+    const data = await response.json();
+    const processedData = processData(data);
+    console.log(processedData);
+    displayData(processedData);
+  } catch (error) {
+    console.error(error);
+    content.innerHTML = `<p>Sorry, we couldn't get the weather data. Please try again.</p>`;
+  }
 }
 
 function processData(data) {
